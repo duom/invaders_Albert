@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Assets;
+import com.mygdx.game.Timer;
 
 public class World {
     Space space;
@@ -13,6 +14,7 @@ public class World {
     BitmapFont font,fontOver,puntuacion;
     AlienShoot alienShoot;
     Alien alien;
+    Timer temporizador = new Timer(1);
 
 
 
@@ -38,26 +40,53 @@ public class World {
         space.render(batch);
         ship.render(batch);
         alienArmy.render(batch);
-        font.draw(batch, "LIFES: " + ship.getVida(), 20, WORLD_HEIGHT - 5);
+        font.draw(batch, "LIVE: " + ship.getVida(), 20, WORLD_HEIGHT - 5);
         puntuacion.draw(batch,"SCORE: " + ship.getPuntuacion(), 120, WORLD_HEIGHT-5);
 
         if(ship.getVida()==0||ship.getVida()<0){
 
             font.draw(batch, "GAME OVER",WORLD_WIDTH/2-45, WORLD_HEIGHT/2);
-
             alienArmy.speedX=0;
             alienArmy.speedY=0;
 
+            temporizador.update(delta);
+            if (temporizador.check()){
+                resetGame(space,ship,alienArmy,assets,delta, batch);
+            }
+
+
+        }
+        // batch.end();
+
+        if(alienArmy.y <= 126){
+
+            font.draw(batch, "GAME OVER",WORLD_WIDTH/2-45, WORLD_HEIGHT/2);
+            alienArmy.speedX=0;
+            alienArmy.speedY=0;
+
+            temporizador.update(delta);
+            if (temporizador.check()){
+                resetGame(space,ship,alienArmy,assets,delta, batch);
+            }
+
+
         }
         batch.end();
-
-//        if(alien.position.y==126){
-//            font.draw(batch, "GAME OVER",WORLD_WIDTH/2-45, WORLD_HEIGHT/2);
-//            alienArmy.speedX=0;
-//            alienArmy.speedY=0;
-//        }
     }
 
+    public void resetGame(Space space, Ship ship, AlienArmy alienArmy, Assets assets, Float delta, SpriteBatch batch){
+
+        ship.vida = 3;
+        ship.puntuacion = 0;
+
+        puntuacion.draw(batch,"SCORE: " + ship.getPuntuacion(), 120, WORLD_HEIGHT-5);
+        this.alienArmy = new AlienArmy(WORLD_WIDTH,WORLD_HEIGHT);
+
+        space.update(delta, assets);
+        ship.update(delta, assets);
+        alienArmy.update(delta, assets);
+
+    }
 
 
     public void delay(){
