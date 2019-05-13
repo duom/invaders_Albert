@@ -16,6 +16,7 @@ public class AlienArmy {
     float speedY = 10f;
 
     Ship ship;
+    //
 
     Array<Alien> aliens;
     Array<AlienShoot> shoots;
@@ -103,7 +104,7 @@ public class AlienArmy {
             }else if(y<=minY){
                 y=minY;
                 speedY=0;
-                ship.setVida(0);
+
 
             }
 
